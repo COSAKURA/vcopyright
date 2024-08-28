@@ -1,0 +1,61 @@
+
+.header {
+    background: linear-gradient(90deg, #fccfe4 0%, #cffbff 100%);
+    padding: 40px 12px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px 15px 0px 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .header .logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+    line-height: 1.2;
+    margin: 0;
+  }
+  
+  .header .header-actions {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .header .header-actions .el-dropdown-link {
+    font-size: 24px;
+    color: #fff;
+  }
+  
+  .header .header-actions .logout-button {
+    font-size: 16px;
+    color: #fff;
+    background-color: #ff4d4f;
+    border-radius: 4px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+    gap: 8px;
+  }
+  
+  .header .header-actions .logout-button:hover {
+    background-color: #ff7875;
+    transform: scale(1.05);
+  }
+  
+  .header .header-actions .logout-button:active {
+    background-color: #ff4d4f;
+    transform: scale(0.95);
+  }
+  
+  .header .header-actions .logout-icon {
+    font-size: 18px;
+  }
