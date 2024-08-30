@@ -239,109 +239,128 @@
     </div>
 
     <el-dialog
-      :visible.sync="uploadDialogVisible"
-      title="欢迎上传作品"
-      width="30%"
+    :visible.sync="uploadDialogVisible"
+    title="欢迎上传作品"
+    width="50%"
+  >
+    <el-form :model="newWork" ref="uploadForm">
+      <el-form-item label="作品标题">
+        <el-input
+          v-model="newWork.title"
+          placeholder="请输入作品标题"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="作品描述">
+        <el-input
+          v-model="newWork.description"
+          type="textarea"
+          placeholder="请输入作品描述"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="上传文件">
+        <el-upload
+        ref="upload"
+        :file-list="fileList"
+        :auto-upload="false"
+        :on-change="handleFileChange"
+        :before-upload="beforeUpload"
+  class="upload-demo"
+  drag
+  >
+  <i class="el-icon-upload"></i>
+  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+</el-upload>
+        
+      </el-form-item>
+    </el-form>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="uploadDialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="submitUpload">提交</el-button>
+    </span>
+  </el-dialog>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      title="作品详情"
+      width="60%"
+      custom-class="custom-dialog"
     >
-      <el-form :model="newWork">
-        <el-form-item label="作品标题">
-          <el-input
-            v-model="newWork.title"
-            placeholder="请输入作品标题"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="作品描述">
-          <el-input
-            v-model="newWork.description"
-            type="textarea"
-            placeholder="请输入作品描述"
-          ></el-input>
-        </el-form-item>
-      </el-form>
+      <el-table :data="[selectedWork]" border style="width: 100%">
+        <el-table-column label="属性" width="150">
+          <template>
+            <div>作品编号</div>
+            <div>作品</div>
+            <div>作者</div>
+            <div>作品描述</div>
+            <div>是否申请版权</div>
+            <div>状态</div>
+            <div>上传时间</div>
+            <div>最后修改时间</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="详情">
+          <template>
+            <div>{{ selectedWork.id }}</div>
+            <div>{{ selectedWork.title }}</div>
+            <div>{{ username }}</div>
+            <div>{{ selectedWork.description }}</div>
+            <div>{{ selectedWork.copyrightApplied }}</div>
+            <div>{{ getStatusLabel(selectedWork.status) }}</div>
+            <div>{{ selectedWork.createdAt }}</div>
+            <div>{{ selectedWork.updatedAt }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
+
       <span slot="footer" class="dialog-footer">
-        <el-button @click="uploadDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="uploadWork">提交</el-button>
+        <el-button @click="dialogVisible = false" type="primary"
+          >关闭</el-button
+        >
       </span>
     </el-dialog>
 
     <el-dialog
-  :visible.sync="dialogVisible"
-  title="作品详情"
-  width="60%"
-  custom-class="custom-dialog"
->
-  <el-table :data="[selectedWork]" border style="width: 100%">
-    <el-table-column label="属性" width="150">
-      <template>
-        <div>作品编号</div>
-        <div>作品</div>
-        <div>作者</div>
-        <div>作品描述</div>
-        <div>是否申请版权</div>
-        <div>状态</div>
-        <div>上传时间</div>
-        <div>最后修改时间</div>
-      </template>
-    </el-table-column>
-    <el-table-column label="详情">
-      <template>
-        <div>{{ selectedWork.id }}</div>
-        <div>{{ selectedWork.title }}</div>
-        <div>{{ username }}</div>
-        <div>{{ selectedWork.description }}</div>
-        <div>{{ selectedWork.copyrightApplied }}</div>
-        <div>{{ getStatusLabel(selectedWork.status) }}</div>
-        <div>{{ selectedWork.createdAt }}</div>
-        <div>{{ selectedWork.updatedAt }}</div>
-      </template>
-    </el-table-column>
-  </el-table>
+      :visible.sync="dialogVisible2"
+      title="版权详情"
+      width="60%"
+      custom-class="custom-dialog"
+    >
+      <el-table :data="[selectedWork2]" border style="width: 100%">
+        <el-table-column label="属性" width="150">
+          <template>
+            <div>链上编号</div>
+            <div>作品</div>
+            <div>作者</div>
+            <div>作品描述</div>
+            <div>是否申请版权</div>
+            <div>状态</div>
+            <div>版权编号</div>
+            <div>申请时间</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="详情">
+          <template>
+            <div>{{ selectedWork2.chainId }}</div>
+            <div>{{ selectedWork2.title }}</div>
+            <div>{{ selectedWork2.creatorUsername }}</div>
+            <div>{{ selectedWork2.description }}</div>
+            <div>{{ selectedWork2.applied }}</div>
+            <div>{{ selectedWork2.status === 1 ? "同意" : "拒绝" }}</div>
+            <div>{{ selectedWork2.copyrightNumber }}</div>
+            <div>{{ selectedWork2.createdAt }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
 
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false" type="primary">关闭</el-button>
-  </span>
-</el-dialog>
-
-<el-dialog
-  :visible.sync="dialogVisible2"
-  title="版权详情"
-  width="60%"
-  custom-class="custom-dialog"
->
-  <el-table :data="[selectedWork2]" border style="width: 100%">
-    <el-table-column label="属性" width="150">
-      <template>
-        <div>链上编号</div>
-        <div>作品</div>
-        <div>作者</div>
-        <div>作品描述</div>
-        <div>是否申请版权</div>
-        <div>状态</div>
-        <div>版权编号</div>
-        <div>申请时间</div>
-      </template>
-    </el-table-column>
-    <el-table-column label="详情">
-      <template>
-        <div>{{ selectedWork2.chainId }}</div>
-        <div>{{ selectedWork2.title }}</div>
-        <div>{{ selectedWork2.creatorUsername }}</div>
-        <div>{{ selectedWork2.description }}</div>
-        <div>{{ selectedWork2.applied }}</div>
-        <div>{{ selectedWork2.status === 1 ? '同意' : '拒绝' }}</div>
-        <div>{{ selectedWork2.copyrightNumber }}</div>
-        <div>{{ selectedWork2.createdAt }}</div>
-      </template>
-    </el-table-column>
-  </el-table>
-
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible2 = false" type="primary">关闭</el-button>
-  </span>
-</el-dialog>
-
-
-
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false" type="primary"
+          >关闭</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -351,6 +370,7 @@ import request from "@/utils/request";
 export default {
   data() {
     return {
+      uploadDialogVisible: false, // 控制弹窗显示与隐藏
       username: "",
       myWorks: [],
       appliedWorks: [],
@@ -362,7 +382,7 @@ export default {
       dialogVisible2: false, // 控制弹框的显示
       selectedWork: [], // 存储选中的作品详情
       selectedWork2: [], // 存储选中的作品详情
-      pageSize: 10, // 每页条数
+      pageSize: 9, // 每页条数
       currentPageMyWorks: 1, // 当前页码（我的作品）
       currentPageApprovedWorks: 1, // 当前页码（已申请版权作品）
       currentPageNotAppliedWorks: 1, // 当前页码（未申请版权作品）
@@ -370,10 +390,13 @@ export default {
       totalApprovedWorks: 0, // 总条数（已申请版权作品）
       totalNotAppliedWorks: 0, // 总条数（未申请版权作品）
       uploadDialogVisible: false, // 控制上传作品弹框的显示
+      uploadDialogVisible: false,
       newWork: {
         title: "",
         description: "",
       },
+      selectedFile: null,
+      fileList: [], // 文件列表
     };
   },
   computed: {
@@ -389,13 +412,13 @@ export default {
     paginatedApprovedWorks() {
       return this.approvedWorks.slice(
         (this.currentPageApprovedWorks - 1) * this.pageSize,
-        this.currentPageApprovedWorks * this.pageSize,
+        this.currentPageApprovedWorks * this.pageSize
       );
     },
     paginatedNotAppliedWorks() {
       return this.notAppliedWorks.slice(
         (this.currentPageNotAppliedWorks - 1) * this.pageSize,
-        this.currentPageNotAppliedWorks * this.pageSize,
+        this.currentPageNotAppliedWorks * this.pageSize
       );
     },
   },
@@ -409,10 +432,52 @@ export default {
     //     console.error('Error fetching data:', error);
     //   });
     // },
+    handleFileChange(file, fileList) {
+      this.selectedFile = file.raw;
+      this.fileList = fileList;
+    },
+    beforeUpload(file) {
+      this.selectedFile = file;
+      return false; // 禁用自动上传
+    },
+    async submitUpload() {
+      if (!this.newWork.title || !this.selectedFile) {
+        this.$message.error('请填写所有字段并选择文件');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('createId', localStorage.getItem("id"));
+      formData.append('title', this.newWork.title);
+      formData.append('description', this.newWork.description);
+      formData.append('file', this.selectedFile);
+
+      try {
+        const response = await request.post('/works/creator/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        if (response.status === 200) {
+          this.$message.success('作品提交成功');
+          this.uploadDialogVisible = false;
+          this.newWork = { title: '', description: '' };
+          this.fileList = [];
+          this.selectedFile = null;
+        } else {
+          this.$message.error('提交失败');
+        }
+      } catch (error) {
+        this.$message.error('提交失败: ' + error.message);
+      }
+    }
+,
     uploadWork() {
       const payload = {
-        id: localStorage.getItem("id"),
+        createId: localStorage.getItem("id"),
         title: this.newWork.title,
+        workHash: this.newWork.workHash,
         description: this.newWork.description,
       };
 
@@ -427,22 +492,22 @@ export default {
             this.newWork.title = "";
             this.newWork.description = "";
 
-             // 确认后刷新数据或页面
-        this.$confirm('作品上传成功，点击确定以刷新数据。', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'success'
-        }).then(() => {
-          // 调用刷新数据的方法
-          this.getMyWorks(); // 如果有单独的数据更新方法，可以调用这个方法
+            // 确认后刷新数据或页面
+            this.$confirm("作品上传成功，点击确定以刷新数据。", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "success",
+            })
+              .then(() => {
+                // 调用刷新数据的方法
+                this.getMyWorks(); // 如果有单独的数据更新方法，可以调用这个方法
 
-          // 或者刷新整个页面
-          // location.reload();
-        }).catch(() => {
-          // 用户取消了刷新操作
-        });
-
-            
+                // 或者刷新整个页面
+                // location.reload();
+              })
+              .catch(() => {
+                // 用户取消了刷新操作
+              });
           } else {
             this.$message.error("上传失败");
           }
@@ -526,7 +591,7 @@ export default {
 
       // 取消操作
       request
-        .get(`/works/creator/applicationFalse?workId=${work.id}`)
+        .get(`/works/creator/appliedFalse?workId=${work.id}`)
         .then((response) => {
           if (response.data.code === 200) {
             this.$message.success("取消成功");
@@ -575,4 +640,7 @@ export default {
 
 <style scoped>
 @import "@/assets/css/creatorStyle.css";
+.dialog-footer {
+  text-align: right;
+}
 </style>
