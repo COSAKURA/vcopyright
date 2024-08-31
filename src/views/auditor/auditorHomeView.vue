@@ -51,7 +51,7 @@
 
         <!-- Tables -->
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="14">
             <el-card>
               <div slot="header" class="clearfix">
                 <span>待审核</span>
@@ -71,6 +71,14 @@
                 </el-table-column>
                 <el-table-column prop="method" label="操作">
                   <template slot-scope="scope">
+                    <el-button
+                      type="success"
+                      @click="repetition(scope.row.id)"
+                      :loading="isLoading"
+                      :disabled="isLoading"
+                    >
+                      查重
+                    </el-button>
                     <el-button
                       type="success"
                       @click="approve(scope.row.id, true)"
@@ -103,7 +111,7 @@
             </el-card>
           </el-col>
 
-          <el-col :span="12">
+          <el-col :span="10">
             <el-card>
               <div slot="header" class="clearfix">
                 <span>已审核</span>
@@ -238,6 +246,24 @@ export default {
           this.$message.error("审核失败");
           this.isLoading = false;
         });
+    },
+
+
+    // 计算作品查重
+    repetition(id) {
+      request
+      .get("/api/check/plagiarism",{
+        params: {
+            id: id
+          },
+      }).then((re =>{
+        if (re.data.code === 200) {
+          this.$message.success(re.data.data);
+        }else{
+          this.$message.error(re.data.msg);
+        }
+      }))
+
     },
     // 计算分页
     handleSizeChangeUnconfirmed(val) {
