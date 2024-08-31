@@ -241,11 +241,6 @@ export default {
           }
           this.isLoading = false;
         })
-        .catch((error) => {
-          console.error("审核时出错:", error);
-          this.$message.error("审核失败");
-          this.isLoading = false;
-        });
     },
 
 
